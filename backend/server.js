@@ -6,10 +6,9 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
-import puppeteer from "puppeteer-core";
+import puppeteer from "puppeteer";
 import fs from "fs";
 import axios from "axios";
-import chromium from "chrome-aws-lambda";
 
 dotenv.config();
 
@@ -19,6 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const __dirname = path.resolve();
 
+// Update this to your actual API URL
 const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
 
 app.get("/api/og-image/:postId", async (req, res) => {
@@ -41,11 +41,7 @@ app.get("/api/og-image/:postId", async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    const browser = await puppeteer.launch({
-      args: chromium.args,
-      executablePath: await chromium.executablePath,
-      headless: true,
-    });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
     const templatePath = path.join(__dirname, "og-template.html");
