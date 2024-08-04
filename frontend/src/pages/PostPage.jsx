@@ -80,6 +80,7 @@ const PostPage = () => {
   }
 
   const copy = `${window.location.origin}/api/og-image/${currentPost._id}`;
+  const cop = `${window.location.origin}/${user.username}/post/${post._id}`;
 
   const copyURL = () => {
     navigator.clipboard.writeText(copy).then(() => {
@@ -98,7 +99,7 @@ const PostPage = () => {
           content={`Posted by @${user.username} on Squad HUB`}
         />
         <meta property="og:image" content={copy} />
-        <meta property="og:url" content={window.location.href} />
+        <meta property="og:url" content={cop} />
         <meta property="og:type" content="article" />
         <meta property="og:site_name" content="Squad Hub" />
       </Helmet>
