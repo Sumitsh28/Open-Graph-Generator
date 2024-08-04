@@ -53,27 +53,6 @@ const getPost = async (req, res) => {
     }
 
     res.status(200).json(post);
-
-    const html = `
-    <html>
-      <head>
-        <title>${post.title}</title>
-        <meta property="og:title" content="${post.text}" />
-        <meta property="og:description" content="${post.description}" />
-        <meta property="og:image" content="${post.image}" />
-        <meta property="og:url" content="${req.protocol}://${req.get("host")}${
-          req.originalUrl
-        }" />
-        <meta property="og:type" content="article" />
-      </head>
-      <body>
-        <div id="root"></div>
-        <script src="/path/to/your/react/app.js"></script>
-      </body>
-    </html>
-  `;
-
-    res.send(html);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
