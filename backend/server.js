@@ -21,7 +21,7 @@ app.get("/api/og-image/:postId", async (req, res) => {
 
   try {
     // Fetch the post details
-    const response = await fetch(`http://localhost:3000/api/posts/${postId}`);
+    const response = await fetch(`/api/posts/${postId}`);
     const post = await response.json();
 
     if (!post) {
