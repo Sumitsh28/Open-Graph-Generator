@@ -6,9 +6,10 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import fs from "fs";
 import axios from "axios";
+import chromium from "chrome-aws-lambda";
 
 dotenv.config();
 
@@ -40,7 +41,11 @@ app.get("/api/og-image/:postId", async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      args: chromium.args,
+      executablePath: await chromium.executablePath,
+      headless: true,
+    });
     const page = await browser.newPage();
 
     const templatePath = path.join(__dirname, "og-template.html");
