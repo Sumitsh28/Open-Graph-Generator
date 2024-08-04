@@ -6,13 +6,15 @@ import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import { v2 as cloudinary } from "cloudinary";
 import path from "path";
+import puppeteer from "puppeteer";
+import fs from "fs";
+import axios from "axios";
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
-
 const PORT = process.env.PORT || 4000;
 const __dirname = path.resolve();
 
@@ -21,8 +23,10 @@ app.get("/api/og-image/:postId", async (req, res) => {
 
   try {
     // Fetch the post details
-    const response = await fetch(`/api/posts/${postId}`);
-    const post = await response.json();
+    const response = await axios.get(
+      `https://open-graph-generator.onrender.com/api/posts/${postId}`
+    );
+    const post = response.data;
 
     if (!post) {
       return res.status(404).send("Post not found");

@@ -97,8 +97,8 @@ const PostPage = () => {
           property="og:description"
           content={`Posted by @${user.username} on Squad HUB`}
         />
-        <meta property="og:image" content={currentPost.img} />
-        <meta property="og:url" content={copy} />
+        <meta property="og:image" content={copy} />
+        <meta property="og:url" content={window.location.href} />
         <meta property="og:type" content="article" />
         <meta property="og:site_name" content="Squad Hub" />
       </Helmet>
