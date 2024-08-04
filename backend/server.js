@@ -18,29 +18,39 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const __dirname = path.resolve();
 
+const API_BASE_URL = process.env.API_BASE_URL || "http://localhost:3000";
+
 app.get("/api/og-image/:postId", async (req, res) => {
   const { postId } = req.params;
 
   try {
-    // Fetch the post details
-    const response = await axios.get(
-      `https://open-graph-generator.onrender.com/api/posts/${postId}`
-    );
+    const response = await axios.get(`${API_BASE_URL}/api/posts/${postId}`);
     const post = response.data;
 
     if (!post) {
       return res.status(404).send("Post not found");
     }
 
-    // Launch Puppeteer
+    const userResponse = await axios.get(
+      `${API_BASE_URL}/api/users/profile/${post.postedBy}`
+    );
+    const user = userResponse.data;
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // Load and customize the template
     const templatePath = path.join(__dirname, "og-template.html");
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template file not found at ${templatePath}`);
+    }
+
     let template = fs.readFileSync(templatePath, "utf8");
-    template = template.replace("{{postTitle}}", post.title);
-    template = template.replace("{{postedBy}}", post.postedBy || "Anonymous");
+    template = template.replace("{{postTitle}}", post.text || "No Title");
+    template = template.replace("{{postedBy}}", user.username || "Anonymous");
     template = template.replace(
       "{{postImageUrl}}",
       post.img || "https://example.com/default-image.jpg"
@@ -49,12 +59,10 @@ app.get("/api/og-image/:postId", async (req, res) => {
     await page.setContent(template);
     await page.setViewport({ width: 1200, height: 630 });
 
-    // Capture the screenshot
     const screenshot = await page.screenshot({ type: "jpeg", quality: 90 });
 
     await browser.close();
 
-    // Set content-type and send the image
     res.set("Content-Type", "image/jpeg");
     res.send(screenshot);
   } catch (error) {
