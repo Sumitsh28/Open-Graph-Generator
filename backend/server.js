@@ -44,7 +44,7 @@ app.get("/api/og-image/:postId", async (req, res) => {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    const templatePath = path.join(__dirname, "og-template.html");
+    const templatePath = path.join(__dirname, "frontend", "dist", "index.html");
     if (!fs.existsSync(templatePath)) {
       throw new Error(`Template file not found at ${templatePath}`);
     }
