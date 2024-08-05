@@ -80,7 +80,7 @@ const PostPage = () => {
   }
 
   const copy = `${window.location.origin}/api/og-image/${currentPost._id}`;
-  const cop = `${window.location.origin}/${user.username}/post/${post._id}`;
+  const cop = `${window.location.origin}/${user.username}/post/${currentPost._id}`;
 
   const copyURL = () => {
     navigator.clipboard.writeText(copy).then(() => {
